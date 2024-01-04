@@ -1,0 +1,50 @@
+<HTML><HEAD>
+    <TITLE>Caladium</TITLE>
+   
+   <style type="text/css">
+     H1{ font-size: 120%; color: green}
+     H2{ font-size: 100%; color: green}
+   </style>
+   <script src="tree.js" type="text/javascript"></script>
+   <script src="../../dat_gui_min.js" type="text/javascript"></script>
+   <script src="../bezier.js" type="text/javascript"></script>
+   <script src="../CanvasMatrix.js" type="text/javascript"></script>
+   <script src="../Controls.js" type="text/javascript"></script>
+   
+   <script id="shader-vs-show" type="x-shader/x-vertex"> 
+     attribute vec3 aPos;
+     attribute vec3 aCol;
+     attribute vec2 aTC;
+     uniform mat4 mvMatrix;
+     uniform float anim;
+     varying vec3 color;
+     varying vec2 vTC;
+   void main(void) {
+      vTC = aTC;
+      gl_Position = mvMatrix * vec4(aPos.x + anim*aTC.x, aPos.yz, 1.);
+      color = aCol;
+   }
+   </script> 
+    
+   <script id="shader-fs-show" type="x-shader/x-fragment"> 
+   precision mediump float;
+     varying vec3 color;
+     varying vec2 vTC;
+     uniform sampler2D uTS;
+   void main(void) {
+      float c = texture2D(uTS, vTC).r + .1;
+   //   gl_FragColor = vec4(fract(vTC.y),0.,0., 1.);
+      gl_FragColor = vec4(c*color, 1.);
+   }
+   </script> 
+    
+   <script src="base.js" type="text/javascript"></script>
+   </head>
+   <body onload="start();" onresize="canvas.resize();"> 
+    <canvas id="canvas" width="500" height="500"></canvas> 
+   <input size="2" id="framerate">
+   
+
+   </BODY>
+</HTML>
+   
