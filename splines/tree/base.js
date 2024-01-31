@@ -1,6 +1,6 @@
    var pt, ind, off,pi,pi2, pi0 = 1200000, su = 33,sv = 9, rnd, irnd,
-       leaf = true, age = 9, thr1 = .6, thr2 = .6, fir = 3,
-       th1 = -.8, fi1 = 2, th2 = -.5, fi2 = 0, sclen = .8, scr1 = .6,
+       leaf = true, age = 1, thr1 = 0, thr2 = 0, fir = 0,
+       th1 = 0, fi1 = 0, th2 = 0, fi2 = 0, sclen = .8, scr1 = .6,
        anim = 0, bAnim = false, uAnim, tex, green = false, first = true,
        frames = 0, time;
    var prMatrix, mvMat, mvMatLoc, rotMat, c_w, c_h;
@@ -174,13 +174,13 @@
      this.length = sclen
    };
    var guiTwig1 = function() {
-     this.bend = th1
-     this.rot = fi1
-     this.scale_r1 = scr1
+    //  this.bend = th1
+    //  this.rot = fi1
+    //  this.scale_r1 = scr1
    };
    var guiTwig2 = function() {
-     this.bend = th2
-     this.rot = fi2
+    //  this.bend = th2
+    //  this.rot = fi2
    };
    function start() {
      webGLStart()

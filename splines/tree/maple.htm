@@ -32,7 +32,7 @@
      varying vec2 vTC;
      uniform sampler2D uTS;
    void main(void) {
-      float c = texture2D(uTS, vTC).r + .1;
+      float c = texture2D(uTS, vTC).r + .0004;
    //   gl_FragColor = vec4(fract(vTC.y),0.,0., 1.);
       gl_FragColor = vec4(c*color, 1.);
    }
