@@ -1,7 +1,7 @@
    var pt, ind, off,pi,pi2, pi0 = 1200000, su = 33,sv = 9, rnd, irnd,
-       leaf = true, age = 1, thr1 = 0, thr2 = 0, fir = 0,
+       leaf = true, age = 9, thr1 = 0, thr2 = 0, fir = 0,
        th1 = 0, fi1 = 0, th2 = 0, fi2 = 0, sclen = .8, scr1 = .6,
-       anim = 0, bAnim = false, uAnim, tex, green = false, first = true,
+       anim = 0, bAnim = false, uAnim, tex, green = true, first = true,
        frames = 0, time;
    var prMatrix, mvMat, mvMatLoc, rotMat, c_w, c_h;
 
@@ -41,7 +41,7 @@
       mvMatrix = new CanvasMatrix4();
       rotMat = new CanvasMatrix4();
       rotMat.makeIdentity();
-      rotMat.rotate(-140, 0,1,0);
+      rotMat.rotate(-160, 0,1,1); // rotate the tree
       mvMatLoc = gl.getUniformLocation(prog_show,"mvMatrix");
    
       var k = 512,  img = new Uint8Array(4* k*k);
@@ -105,9 +105,10 @@
       off = 0; pi = 0; pi2 = pi0;  irnd = 0
       var b1 = new Float32Array([0,1,0, 0,0,1, 1,0,0, 0,0,0, 0,0]);
       var rg = .1+.05*age
-      base(b1, 0, 1.5*rg,1.2*rg,.3*rg, .2,1, 1)
+      // console.log('age', age)
+      base(b1, 0, 1.5*rg,1.2*rg,.3*rg, .2,1, 1) // to remove the trunk base 
       twig(b1, .1,0, 1.2*rg,rg, 1,1, 2,1)
-      branch(age, b1, rg,1.5, 4,[0,1,1,0,0,0,0,0,0])
+      branch(age, b1, rg,1.5, 4,[0,1,1,0,0,0,0,0,0], age)
    //alert(pi)
       var t = off/8, i = 0,  r = 1.5; // ground
       var gr = [-r,-r, r,-r, -r,r, r,r];
@@ -122,23 +123,28 @@
       gl.bufferData(gl.ARRAY_BUFFER, pt, gl.STATIC_DRAW);
       drawScene()
    }
-   function branch(it, b, sr,sb, stu,div){
-      var b2 = new Float32Array(b),  sr2 = sr*3
+   function branch(it, b, sr,sb, stu,div, age){
+    // console.log('it', it)
+    var b2 = new Float32Array(b),  sr2 = sr*3, age2 = age;
+    // console.log('age2', age2)
       rami(b,b2, -thr1,thr2,fir, sr,.8*sr,.8*sr, sr2,sr2,sr2, .3, stu)
-      var di = div[it], sr1 = scr1*sr, sr2 = .6*sr
+      var di = div[it], sr1 = scr1*sr, sr2 = .2*sr
       if(first) twig(b, th1*.7,fi1, .8*sr,sr1, sb,sb, stu,di)
       else twig(b, th1,fi1, .8*sr,sr1, sb,sb, stu,di)
       twig(b2, th2,fi2, .8*sr,sr2, sb,sb, stu,di)
       if(di) stu *= 2
       it--
       if(it == 0){
-        if(leaf){ leaves3(b, sr1, green); leaves3(b2, sr2, green)}
+        if(leaf){ 
+          leaves3(b, sr1, green, age2); 
+          // leaves3(b2, sr2, green);
+        }
         return }
       if(first){  first = false
-        branch(it, b, sr1, sb*sclen*.6, stu,div)
+        branch(it, b, sr1, sb*sclen*.6, stu,div, age2)
       }
-      else branch(it, b, sr1, sb*sclen, stu,div)
-      branch(it, b2, sr2, sb*sclen, stu,div)
+      else branch(it, b, sr1, sb*sclen, stu,div, age2)
+      // branch(it, b2, sr2, sb*sclen, stu,div) // to remove the second branch
    }
    function rand(){
      for(var i = 0; i < 10000; i++ ) rnd[i] = Math.random()
@@ -174,13 +180,13 @@
      this.length = sclen
    };
    var guiTwig1 = function() {
-    //  this.bend = th1
-    //  this.rot = fi1
-    //  this.scale_r1 = scr1
+     this.bend = th1
+     this.rot = fi1
+     this.scale_r1 = scr1
    };
    var guiTwig2 = function() {
-    //  this.bend = th2
-    //  this.rot = fi2
+     this.bend = th2
+     this.rot = fi2
    };
    function start() {
      webGLStart()
