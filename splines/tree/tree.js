@@ -12,7 +12,7 @@ function rami(b1, b2, th1, th2, nfi, R0, R1, R2, l0, l1, l2, a, stu) {
     b0[i + 6] = sif * b1[i + 3] + cof * b1[i + 6]; // fi rot
     b0[i + 3] = b1[i + 3] = b2[i + 3] = cof * b1[i + 3] - sif * b1[i + 6];
     bc[i] = b1[i + 9] + l0 * b1[i];
-    // bc[i + 3] = ta2 * b0[i] + b0[i + 6]; // to look like an even stem
+    bc[i + 3] = ta2 * b0[i] + b0[i + 6]; // to look like an even stem
     b1[i + 6] = si * b0[i] + co * b0[i + 6]; // th rot
     b1[i] = co * b0[i] - si * b0[i + 6];
     b1[i + 9] = bc[i] + l1 * b1[i];
@@ -176,7 +176,6 @@ function base(b, nfi, R0, R2, dR, l0, l1, redu) {
   b[13]++;
 }
 
-
 function leaves3(b, R, green, age) {
   if (b[1] > 0) {
     b[1] = b[1] * (1 - b[1] * b[1]);
@@ -185,14 +184,12 @@ function leaves3(b, R, green, age) {
     no = 1 / Math.sqrt(no);
     for (var j = 0; j < 3; j++) b[j] *= no;
   }
-  
+
   leaf3(b, R, 1, 0.1, 0, green, age); // change stem to leaf position
   // console.log('green', green)
-  console.log('R', R)
-  console.log('b', b)
+  console.log("R", R);
+  console.log("b", b);
 
-
-  
   // leaf3(b, R, 0.7, -0.1, 0.9, green);
   // leaf3(b, R, 0.7, 0.1, -1.8, green);
   // leaf3(b, R, 1.4, -0.15, 0.4, green);
@@ -200,9 +197,9 @@ function leaves3(b, R, green, age) {
 }
 function leaf30(b, R, lb, y0, ang, green, age) {
   // autumn
-  console.log(age)
+  console.log(age);
   var dis = Math.round(b[13] + 2);
-  var t0 = (off / 8),
+  var t0 = off / 8,
     r1 = 0.6 * age,
     rm = 0.5 * age + 1,
     r2 = 0.6 * age,
@@ -217,7 +214,7 @@ function leaf30(b, R, lb, y0, ang, green, age) {
   var no = Math.sqrt(b[0] * b[0] + b[2] * b[2]);
   bn[0] = b[2] / no;
   bn[2] = -b[0] / no;
-  bn[4] = 0.2 + (age * 0.15); // to change the depth of the leaf
+  bn[4] = 0.2 + age * 0.15; // to change the depth of the leaf
   for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j];
 
   // for the color
@@ -361,85 +358,147 @@ function leaf30(b, R, lb, y0, ang, green, age) {
 }
 
 function leaf3(b, R, lb, y0, ang, green, age) {
-  console.log('age', age)
-  var t0 = off / 8, 
-  r1 = .25 * age, 
-  rm = .39 * age,
-   r2 = .5 * age,
-    si = Math.sin(ang), 
-    co = Math.cos(ang), 
-    fi
-  var t = b[0] * co - b[2] * si
-  b[2] = b[0] * si + b[2] * co
-  b[0] = t
-  b[1] += y0
-  var bn = new Float32Array(6)
-  var no = Math.sqrt(b[0] * b[0] + b[2] * b[2])
-  bn[0] = b[2] / no; 
-  bn[2] = -b[0] / no; 
-  bn[4] = -.05
+  console.log("age", age);
+  var t0 = off / 8,
+    r1 = 0.25 * age,
+    rm = 0.39 * age,
+    r2 = 0.5 * age,
+    si = Math.sin(ang),
+    co = Math.cos(ang),
+    fi;
+  var t = b[0] * co - b[2] * si;
+  b[2] = b[0] * si + b[2] * co;
+  b[0] = t;
+  b[1] += y0;
+  var bn = new Float32Array(6);
+  var no = Math.sqrt(b[0] * b[0] + b[2] * b[2]);
+  bn[0] = b[2] / no;
+  bn[2] = -b[0] / no;
+  bn[4] = 0.05 * 1.25; // change depth // previous val -0.05;
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j];
+  var li = 0.02 * (1 - Math.abs(b[1])); // change shadow property of the leaf
+  pt[off++] = 0;
+  pt[off++] = 0.4 + li;
+  pt[off++] = 0;
+  pt[off++] = 0;
+  pt[off++] = 0;
 
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j]
-  var li = .2 * (1 - Math.abs(b[1]))
-  pt[off++] = 0; 
-  pt[off++] = .4 + li; 
-  pt[off++] = 0
-  pt[off++] = 0; 
-  pt[off++] = 0
-  
-  t = t0 + 1
-  var sd = Math.sin(Math.PI * .1), cd = Math.cos(Math.PI * .1),
-    si = 0, co = -1, tmp
+  t = t0 + 1;
+  var sd = Math.sin(Math.PI * 0.3),
+    cd = Math.cos(Math.PI * 0.3),
+    si = 0,
+    co = -1,
+    tmp;
   for (var i = 0; i < 5; i++) {
-    for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j] + bn[j + 3] +
-      b[j] * (r1 * co + .1) + bn[j] * r1 * si
-    pt[off++] = 0; pt[off++] = .6 + li; pt[off++] = 0
-    pt[off++] = .125; pt[off++] = 1
-    tmp = si * cd + co * sd; co = co * cd - si * sd; si = tmp
-    for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j] + bn[j + 3] +
-      b[j] * (rm * co + .15) + bn[j] * rm * si
-    pt[off++] = 0; pt[off++] = .6 + li; pt[off++] = 0
-    pt[off++] = .5; pt[off++] = 1
-    tmp = si * cd + co * sd; co = co * cd - si * sd; si = tmp
-    for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j] + bn[j + 3] +
-      b[j] * (r2 * co + .2) + bn[j] * r2 * si
-    pt[off++] = 0; pt[off++] = .5 + li; pt[off++] = 0
-    pt[off++] = 1; pt[off++] = 1
-    tmp = si * cd + co * sd; co = co * cd - si * sd; si = tmp
-    for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j] + bn[j + 3] +
-      b[j] * (rm * co + .15) + bn[j] * rm * si
-    pt[off++] = 0; pt[off++] = .6 + li; pt[off++] = 0
-    pt[off++] = 1; pt[off++] = .5
-    tmp = si * cd + co * sd; co = co * cd - si * sd; si = tmp
-    for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j] + bn[j + 3] +
-      b[j] * (r1 * co + .1) + bn[j] * r1 * si
-    pt[off++] = 0; pt[off++] = .6 + li; pt[off++] = 0
-    pt[off++] = 1; pt[off++] = .125
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (r1 * co + 0.1) +
+        bn[j] * r1 * si;
+    pt[off++] = 0;
+    pt[off++] = 0.6 + li;
+    pt[off++] = 0;
+    pt[off++] = 0.125;
+    pt[off++] = 1;
+    tmp = si * cd + co * sd;
+    co = co * cd - si * sd;
+    si = tmp;
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (rm * co + 0.15) +
+        bn[j] * rm * si;
+    pt[off++] = 0;
+    pt[off++] = 0.6 + li;
+    pt[off++] = 0;
+    pt[off++] = 0.5;
+    pt[off++] = 1;
+    tmp = si * cd + co * sd;
+    co = co * cd - si * sd;
+    si = tmp;
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (r2 * co + 0.2) +
+        bn[j] * r2 * si;
+    pt[off++] = 0;
+    pt[off++] = 0.5 + li;
+    pt[off++] = 0;
+    pt[off++] = 1;
+    pt[off++] = 1;
+    tmp = si * cd + co * sd;
+    co = co * cd - si * sd;
+    si = tmp;
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (rm * co + 0.15) +
+        bn[j] * rm * si;
+    pt[off++] = 0;
+    pt[off++] = 0.6 + li;
+    pt[off++] = 0;
+    pt[off++] = 1;
+    pt[off++] = 0.5;
+    tmp = si * cd + co * sd;
+    co = co * cd - si * sd;
+    si = tmp;
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (r1 * co + 0.1) +
+        bn[j] * r1 * si;
+    pt[off++] = 0;
+    pt[off++] = 0.6 + li;
+    pt[off++] = 0;
+    pt[off++] = 1;
+    pt[off++] = 0.125;
   }
   for (var i = 0; i < 5; i++) {
     for (var j = 0; j < 4; j++) {
-      ind[pi2++] = t0; ind[pi2++] = t++; ind[pi2++] = t;
+      ind[pi2++] = t0;
+      ind[pi2++] = t++;
+      ind[pi2++] = t;
     }
-    t++
+    t++;
   }
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + R * b[j + 3]
-  pt[off++] = .5; pt[off++] = .5; pt[off++] = pt[off++] = pt[off++] = 0
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + R * b[j + 6]
-  pt[off++] = .5; pt[off++] = .5; pt[off++] = pt[off++] = pt[off++] = 0
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] - R * b[j + 3]
-  pt[off++] = .5; pt[off++] = .5; pt[off++] = pt[off++] = pt[off++] = 0
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] - R * b[j + 6]
-  pt[off++] = .5; pt[off++] = .5; pt[off++] = pt[off++] = pt[off++] = 0
-  ind[pi2++] = t0; ind[pi2++] = t++; ind[pi2++] = t;
-  ind[pi2++] = t0; ind[pi2++] = t++; ind[pi2++] = t;
-  ind[pi2++] = t0; ind[pi2++] = t++; ind[pi2++] = t;
-  ind[pi2++] = t0; ind[pi2++] = t; ind[pi2++] = t - 3;
-  console.log('t', t)
-  console.log('t0', t0)
-
-  // bn[4]=10
-  console.log('b', b)
-  console.log('bn', bn)
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + R * b[j + 3];
+  pt[off++] = 0.5;
+  pt[off++] = 0.5;
+  pt[off++] = pt[off++] = pt[off++] = 0;
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + R * b[j + 6];
+  pt[off++] = 0.5;
+  pt[off++] = 0.5;
+  pt[off++] = pt[off++] = pt[off++] = 0;
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] - R * b[j + 3];
+  pt[off++] = 0.5;
+  pt[off++] = 0.5;
+  pt[off++] = pt[off++] = pt[off++] = 0;
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] - R * b[j + 6];
+  pt[off++] = 0.5;
+  pt[off++] = 0.5;
+  pt[off++] = pt[off++] = pt[off++] = 0;
+  ind[pi2++] = t0;
+  ind[pi2++] = t++;
+  ind[pi2++] = t;
+  ind[pi2++] = t0;
+  ind[pi2++] = t++;
+  ind[pi2++] = t;
+  ind[pi2++] = t0;
+  ind[pi2++] = t++;
+  ind[pi2++] = t;
+  ind[pi2++] = t0;
+  ind[pi2++] = t;
+  ind[pi2++] = t - 3;
 }
 
 function twig(b, th, nfi, R0, R2, l0, l1, stu, sub) {
@@ -585,7 +644,7 @@ function leaf_tex3(k, img) {
       hk[kk2 + k2 + j * (k + k + 1)] =
       hk[kk2 + k4 + j * (k + k + 1)] =
       hk[kk2 + k4 - j * (k + k - 1)] =
-      1 - a * j;
+        1 - a * j;
   for (var it = 0; it < 5; it++)
     for (var j = k; j < k * (k - 1); j++)
       hk[j] =
