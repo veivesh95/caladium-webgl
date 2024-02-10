@@ -70,7 +70,7 @@ function webGLStart() {
     return;
   }
 
-  transl = -21;
+  transl = -67;
   c_w = Math.round(0.9 * window.innerWidth);
   c_h = window.innerHeight - 10;
   canvas.width = c_w;

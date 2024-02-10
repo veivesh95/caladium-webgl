@@ -167,7 +167,7 @@ function base(b, nfi, R0, R2, dR, l0, l1, redu) {
       var li = 0.5 * (b[3] * co + b[6] * si);
       if (li < 0) li = 0;
       pt[off++] = 0.6 + li;
-      pt[off++] = 0.3 + li;
+      pt[off++] = 0. + li;
       pt[off++] = 0;
       pt[off++] = t + b[13];
       pt[off++] = u / (su - 1) + b[12];
@@ -398,7 +398,7 @@ function leaf3(b, R, lb, y0, ang, green, age) {
         b[j] * (r1 * co + 0.1) +
         bn[j] * r1 * si;
     pt[off++] = 0;
-    pt[off++] = 0.6 + li;
+    pt[off++] = 0.9 + li;
     pt[off++] = 0;
     pt[off++] = 0.125;
     pt[off++] = 1;
@@ -428,7 +428,7 @@ function leaf3(b, R, lb, y0, ang, green, age) {
         b[j] * (r2 * co + 0.2) +
         bn[j] * r2 * si;
     pt[off++] = 0;
-    pt[off++] = 0.5 + li;
+    pt[off++] = 0.4 + li;
     pt[off++] = 0;
     pt[off++] = 1;
     pt[off++] = 1;
@@ -458,7 +458,7 @@ function leaf3(b, R, lb, y0, ang, green, age) {
         b[j] * (r1 * co + 0.1) +
         bn[j] * r1 * si;
     pt[off++] = 0;
-    pt[off++] = 0.6 + li;
+    pt[off++] = 0.9 + li; // innard colors
     pt[off++] = 0;
     pt[off++] = 1;
     pt[off++] = 0.125;
@@ -602,7 +602,7 @@ function bark_tex(k, img) {
     s = 0;
   for (var i = 0; i < k; i++)
     for (var j = 0; j < k; j++) {
-      img[t++] = 800 * Math.abs(hk[s++] + 0.2 * Math.sin((Math.PI * i) / 32));
+      img[t++] = 800 * Math.abs(hk[s++] + 0.6 * Math.sin((Math.PI * i) / 12)); // change bark tex
       img[t++] = img[t++] = img[t++] = 0;
     }
 }
