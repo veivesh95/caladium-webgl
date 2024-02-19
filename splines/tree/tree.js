@@ -1,3 +1,20 @@
+/**
+ * Generates a spline based on the given parameters.
+ *
+ * @param {Float32Array} b1 - The first set of control points.
+ * @param {Float32Array} b2 - The second set of control points.
+ * @param {number} th1 - The first angle.
+ * @param {number} th2 - The second angle.
+ * @param {number} nfi - The number of fi.
+ * @param {number} R0 - The first radius.
+ * @param {number} R1 - The second radius.
+ * @param {number} R2 - The third radius.
+ * @param {number} l0 - The first length.
+ * @param {number} l1 - The second length.
+ * @param {number} l2 - The third length.
+ * @param {number} a - The value of a.
+ * @param {number} stu - The value of stu.
+ */
 function rami(b1, b2, th1, th2, nfi, R0, R1, R2, l0, l1, l2, a, stu) {
   var bc = new Float32Array(12), // cpc, bnc, bnc2, bn0top
     b0 = new Float32Array(b1),
@@ -56,6 +73,16 @@ function rami(b1, b2, th1, th2, nfi, R0, R1, R2, l0, l1, l2, a, stu) {
   b1[13] += 0.5 * (l0 + l1);
   b2[13] += 0.5 * (l0 + l2);
 
+  /**
+   * Generates a patch for the tree.
+   * @param {number[]} b - Array of control points.
+   * @param {number} R0 - Radius at the base of the tree.
+   * @param {number} R1 - Radius at the top of the tree.
+   * @param {number} Rm - Radius multiplier.
+   * @param {number} u0 - U offset.
+   * @param {boolean} top - Indicates if it's the top of the tree.
+   * @param {number} ls - Length scale.
+   */
   function patch(b, R0, R1, Rm, u0, top, ls) {
     ls *= 0.5;
     var t = off / 8,
@@ -113,6 +140,18 @@ function rami(b1, b2, th1, th2, nfi, R0, R1, R2, l0, l1, l2, a, stu) {
     }
   } // end patch
 }
+/**
+ * Calculates the base of a tree spline.
+ * 
+ * @param {Array} b - The control points of the spline.
+ * @param {number} nfi - The number of fi.
+ * @param {number} R0 - The initial radius.
+ * @param {number} R2 - The final radius.
+ * @param {number} dR - The change in radius.
+ * @param {number} l0 - The length factor.
+ * @param {number} l1 - The length factor.
+ * @param {boolean} redu - Flag indicating whether to reduce or not.
+ */
 function base(b, nfi, R0, R2, dR, l0, l1, redu) {
   var t = off / 8,
     tm = t + sv;
@@ -176,6 +215,14 @@ function base(b, nfi, R0, R2, dR, l0, l1, redu) {
   b[13]++;
 }
 
+/**
+ * Calculates the position and properties of leaves on a tree branch.
+ * 
+ * @param {number[]} b - The branch vector.
+ * @param {number} R - The radius of the branch.
+ * @param {number[]} green - The color of the leaves.
+ * @param {number} age - The age of the tree.
+ */
 function leaves3(b, R, green, age) {
   if (b[1] > 0) {
     b[1] = b[1] * (1 - b[1] * b[1]);
@@ -357,6 +404,17 @@ function leaf30(b, R, lb, y0, ang, green, age) {
   ind[pi2++] = t - 3;
 }
 
+/**
+ * Calculates the properties of a leaf based on the given parameters.
+ *
+ * @param {number[]} b - The array containing the leaf properties.
+ * @param {number} R - The radius of the leaf.
+ * @param {number} lb - The length of the leaf.
+ * @param {number} y0 - The y-coordinate of the leaf.
+ * @param {number} ang - The angle of the leaf.
+ * @param {string} green - The color of the leaf.
+ * @param {number} age - The age of the leaf.
+ */
 function leaf3(b, R, lb, y0, ang, green, age) {
   console.log("age", age);
   var t0 = off / 8,
@@ -501,6 +559,19 @@ function leaf3(b, R, lb, y0, ang, green, age) {
   ind[pi2++] = t - 3;
 }
 
+/**
+ * Generates a twig shape based on the given parameters.
+ *
+ * @param {number[]} b - Array of parameters for the twig shape.
+ * @param {number} th - Angle parameter.
+ * @param {number} nfi - Number of fi parameter.
+ * @param {number} R0 - Radius parameter.
+ * @param {number} R2 - Radius parameter.
+ * @param {number} l0 - Length parameter.
+ * @param {number} l1 - Length parameter.
+ * @param {number} stu - Stu parameter.
+ * @param {boolean} sub - Sub parameter.
+ */
 function twig(b, th, nfi, R0, R2, l0, l1, stu, sub) {
   var t = off / 8,
     ssu = (su - 1) / stu + 1,
@@ -571,6 +642,12 @@ function twig(b, th, nfi, R0, R2, l0, l1, stu, sub) {
   }
   b[13] += ls;
 }
+/**
+ * Generates a bark texture using the given parameters.
+ * 
+ * @param {number} k - The size of the texture.
+ * @param {Float32Array} img - The array to store the generated texture.
+ */
 function bark_tex(k, img) {
   var kk = k * k,
     k1 = k - 1,
@@ -606,6 +683,11 @@ function bark_tex(k, img) {
       img[t++] = img[t++] = img[t++] = 0;
     }
 }
+/**
+ * Generates a leaf texture based on the given parameters.
+ * @param {number} k - The size of the leaf texture.
+ * @param {number[]} img - The array to store the generated leaf texture.
+ */
 function leaf_tex(k, img) {
   var kk = k * k,
     k1 = k - 1,
@@ -630,6 +712,11 @@ function leaf_tex(k, img) {
     img[t++] = img[t++] = img[t++] = 0;
   }
 }
+/**
+ * Calculates the leaf texture for a given parameter.
+ * @param {number} k - The parameter value.
+ * @param {Float32Array} img - The image array to store the leaf texture.
+ */
 function leaf_tex3(k, img) {
   var kk = k * k,
     k2 = k / 2,

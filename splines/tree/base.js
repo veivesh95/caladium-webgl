@@ -61,6 +61,9 @@ var pt,
 var prMatrix, mvMat, mvMatLoc, rotMat, c_w, c_h;
 var height = [];
 
+/**
+ * Initializes WebGL and starts the rendering loop.
+ */
 function webGLStart() {
   initGL();
   var err = "Your browser does not support ";
@@ -186,6 +189,9 @@ function webGLStart() {
   };
 }
 
+/**
+ * Animates the scene.
+ */
 function animate() {
   if (!bAnim) return;
   drawScene();
@@ -193,6 +199,10 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
+
+/**
+ * Updates the framerate value on the webpage.
+ */
 function fr() {
   var ti = new Date().getTime();
   document.getElementById("framerate").value = Math.round(
@@ -202,6 +212,9 @@ function fr() {
   time = ti;
 }
 
+/**
+ * Represents a tree.
+ */
 function tree() {
   first = true;
   off = 0;
@@ -291,6 +304,17 @@ function tree() {
 //   // branch(it, b2, sr2, sb*sclen, stu,div) // to remove the second branch
 // }
 
+/**
+ * Represents a branch in a tree.
+ * 
+ * @param {number} it - The iteration count.
+ * @param {Float32Array} b - The branch array.
+ * @param {number} sr - The scale ratio.
+ * @param {number} sb - The scale base.
+ * @param {number} stu - The scale turn unit.
+ * @param {Array} div - The division array.
+ * @param {number} age - The age of the branch.
+ */
 function branch(it, b, sr, sb, stu, div, age) {
   // console.log('it', it)
   var b2 = new Float32Array(b),
@@ -334,10 +358,16 @@ function branch(it, b, sr, sb, stu, div, age) {
   // branch(it, b2, sr2, sb*sclen, stu,div) // to remove the second branch
 }
 
+/**
+ * Generates an array of random numbers.
+ */
 function rand() {
   for (var i = 0; i < 10000; i++) rnd[i] = Math.random();
 }
 
+/**
+ * Draws the scene.
+ */
 function drawScene() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   rotMat.rotate(xRot / 5, 1, 0, 0);
@@ -482,6 +512,10 @@ function setupGui() {
     });
 }
 
+/**
+ * Fetches data from a JSON file and assigns the height values to the 'height' variable.
+ * @returns {Promise<void>} A promise that resolves when the data is fetched and assigned.
+ */
 async function getData() {
   try {
     const response = await fetch("./dataset.json");
