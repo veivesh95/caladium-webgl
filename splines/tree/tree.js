@@ -432,7 +432,7 @@ function leaf3(b, R, lb, y0, ang, green, age) {
   var no = Math.sqrt(b[0] * b[0] + b[2] * b[2]);
   bn[0] = b[2] / no;
   bn[2] = -b[0] / no;
-  bn[4] = 0.05 * 1.25; // change depth // previous val -0.05;
+  bn[4] = 0.05 * (age * 3.75); // change depth // previous val -0.05;
   for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j];
   var li = 0.02 * (1 - Math.abs(b[1])); // change shadow property of the leaf
   pt[off++] = 0;
