@@ -105,7 +105,8 @@ function webGLStart() {
   mvMatrix = new CanvasMatrix4();
   rotMat = new CanvasMatrix4();
   rotMat.makeIdentity();
-  rotMat.rotate(-160, 0, 1, 1); // rotate the tree
+  // rotMat.rotate(-160, 0, 1, 1); // rotate the tree
+  rotMat.rotate(0, 0, 1, 1); // rotate the tree
   mvMatLoc = gl.getUniformLocation(prog_show, "mvMatrix");
 
   var k = 512,

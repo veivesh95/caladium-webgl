@@ -216,6 +216,24 @@ function base(b, nfi, R0, R2, dR, l0, l1, redu) {
 }
 
 /**
+ * 
+ * @param {*} heightValue 
+ * @returns angle
+ */
+function calculateAngle(heightValue) {
+  if (heightValue <= 11) {
+      // Decreasing from 5 to 11
+      return Math.max(0, 1.5 - (heightValue - 5) * 0.15);
+  } else if (heightValue > 11) {
+      // Decreasing from 11 onwards
+      return Math.max(-1.5, -0.15 - (heightValue - 11) * 0.15);
+  } else {
+      // For numbers less than 5, return 1.5
+      return 1.5;
+  }
+}
+
+/**
  * Calculates the position and properties of leaves on a tree branch.
  * 
  * @param {number[]} b - The branch vector.
@@ -231,8 +249,12 @@ function leaves3(b, R, green, age) {
     no = 1 / Math.sqrt(no);
     for (var j = 0; j < 3; j++) b[j] *= no;
   }
-
-  leaf3(b, R, 1, 0.1, 0, green, age); // change stem to leaf position
+// height.length
+// calculateAngle(height[age])
+console.log('calculateAngle(height[age])', calculateAngle(height[age]))
+console.log('(height[age])', (height[age]))
+  // leaf3(b, R, 1, 1.2, 0, green, age); // change stem to leaf position
+  leaf3(b, R, 1, calculateAngle(height[age]), 0, green, age); // change stem to leaf position
   // console.log('green', green)
   console.log("R", R);
   console.log("b", b);
@@ -241,167 +263,6 @@ function leaves3(b, R, green, age) {
   // leaf3(b, R, 0.7, 0.1, -1.8, green);
   // leaf3(b, R, 1.4, -0.15, 0.4, green);
   // leaf3(b, R, 1.5, -0.05, 0.9, green);
-}
-function leaf30(b, R, lb, y0, ang, green, age) {
-  // autumn
-  console.log(age);
-  var dis = Math.round(b[13] + 2);
-  var t0 = off / 8,
-    r1 = 0.6 * age,
-    rm = 0.5 * age + 1,
-    r2 = 0.6 * age,
-    si = Math.sin(ang),
-    co = Math.cos(ang),
-    fi;
-  var t = b[0] * co - b[2] * si;
-  b[2] = b[0] * si + b[2] * co;
-  b[0] = t;
-  b[1] += y0;
-  var bn = new Float32Array(6);
-  var no = Math.sqrt(b[0] * b[0] + b[2] * b[2]);
-  bn[0] = b[2] / no;
-  bn[2] = -b[0] / no;
-  bn[4] = 0.2 + age * 0.15; // to change the depth of the leaf
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j];
-
-  // for the color
-  var li = 0.7 + 0.2 * (1 - Math.abs(b[1])),
-    rli = 0;
-  if (!green) {
-    rli = 0.4 + li * rnd[irnd++];
-    li = 0.3 + li * rnd[irnd] * rnd[irnd++];
-  }
-
-  pt[off++] = 0.7 * rli;
-  pt[off++] = 0.6 * li;
-  pt[off++] = 0;
-  pt[off++] = dis;
-  pt[off++] = 0.5;
-  t = t0 + 1;
-  var sd = Math.sin(Math.PI * 0.1),
-    cd = Math.cos(Math.PI * 0.1),
-    si = 0,
-    co = -1,
-    tmp;
-  for (var i = 0; i < 5; i++) {
-    for (var j = 0; j < 3; j++)
-      pt[off++] =
-        b[j + 9] +
-        lb * b[j] +
-        bn[j + 3] +
-        b[j] * (r1 * co + 0.1) +
-        bn[j] * r1 * si;
-    pt[off++] = rli;
-    pt[off++] = li;
-    pt[off++] = 0;
-    pt[off++] = 0.4 + dis;
-    pt[off++] = 1;
-    tmp = si * cd + co * sd;
-    co = co * cd - si * sd;
-    si = tmp;
-    for (var j = 0; j < 3; j++)
-      pt[off++] =
-        b[j + 9] +
-        lb * b[j] +
-        bn[j + 3] +
-        b[j] * (rm * co + 0.15) +
-        bn[j] * rm * si;
-    pt[off++] = rli;
-    pt[off++] = li;
-    pt[off++] = 0;
-    pt[off++] = 0.75 + dis;
-    pt[off++] = 1;
-    tmp = si * cd + co * sd;
-    co = co * cd - si * sd;
-    si = tmp;
-    for (var j = 0; j < 3; j++)
-      pt[off++] =
-        b[j + 9] +
-        lb * b[j] +
-        bn[j + 3] +
-        b[j] * (r2 * co + 0.2) +
-        bn[j] * r2 * si;
-    pt[off++] = rli;
-    pt[off++] = li;
-    pt[off++] = 0;
-    pt[off++] = 1 + dis;
-    pt[off++] = 0.5;
-    tmp = si * cd + co * sd;
-    co = co * cd - si * sd;
-    si = tmp;
-    for (var j = 0; j < 3; j++)
-      pt[off++] =
-        b[j + 9] +
-        lb * b[j] +
-        bn[j + 3] +
-        b[j] * (rm * co + 0.15) +
-        bn[j] * rm * si;
-    pt[off++] = rli;
-    pt[off++] = li;
-    pt[off++] = 0;
-    pt[off++] = 0.75 + dis;
-    pt[off++] = 0;
-    tmp = si * cd + co * sd;
-    co = co * cd - si * sd;
-    si = tmp;
-    for (var j = 0; j < 3; j++)
-      pt[off++] =
-        b[j + 9] +
-        lb * b[j] +
-        bn[j + 3] +
-        b[j] * (r1 * co + 0.1) +
-        bn[j] * r1 * si;
-    pt[off++] = rli;
-    pt[off++] = li;
-    pt[off++] = 0;
-    pt[off++] = 0.4 + dis;
-    pt[off++] = 0;
-  }
-  for (var i = 0; i < 5; i++) {
-    for (var j = 0; j < 4; j++) {
-      ind[pi2++] = t0;
-      ind[pi2++] = t++;
-      ind[pi2++] = t;
-    }
-    t++;
-  }
-  dis = b[13];
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + R * b[j + 3];
-  pt[off++] = 0.5;
-  pt[off++] = 0.5;
-  pt[off++] = 0;
-  pt[off++] = dis;
-  pt[off++] = 0;
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + R * b[j + 6];
-  pt[off++] = 0.5;
-  pt[off++] = 0.5;
-  pt[off++] = 0;
-  pt[off++] = dis;
-  pt[off++] = 0;
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] - R * b[j + 3];
-  pt[off++] = 0.5;
-  pt[off++] = 0.5;
-  pt[off++] = 0;
-  pt[off++] = dis;
-  pt[off++] = 0;
-  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] - R * b[j + 6];
-  pt[off++] = 0.5;
-  pt[off++] = 0.5;
-  pt[off++] = 0;
-  pt[off++] = dis;
-  pt[off++] = 0;
-  ind[pi2++] = t0;
-  ind[pi2++] = t++;
-  ind[pi2++] = t;
-  ind[pi2++] = t0;
-  ind[pi2++] = t++;
-  ind[pi2++] = t;
-  ind[pi2++] = t0;
-  ind[pi2++] = t++;
-  ind[pi2++] = t;
-  ind[pi2++] = t0;
-  ind[pi2++] = t;
-  ind[pi2++] = t - 3;
 }
 
 /**
@@ -642,6 +503,7 @@ function twig(b, th, nfi, R0, R2, l0, l1, stu, sub) {
   }
   b[13] += ls;
 }
+
 /**
  * Generates a bark texture using the given parameters.
  * 
@@ -742,6 +604,170 @@ function leaf_tex3(k, img) {
     img[t++] = img[t++] = img[t++] = 0;
   }
 }
+
+/**
+function leaf30(b, R, lb, y0, ang, green, age) {
+  // autumn
+  console.log(age);
+  var dis = Math.round(b[13] + 2);
+  var t0 = off / 8,
+    r1 = 0.6 * age,
+    rm = 0.5 * age + 1,
+    r2 = 0.6 * age,
+    si = Math.sin(ang),
+    co = Math.cos(ang),
+    fi;
+  var t = b[0] * co - b[2] * si;
+  b[2] = b[0] * si + b[2] * co;
+  b[0] = t;
+  b[1] += y0;
+  var bn = new Float32Array(6);
+  var no = Math.sqrt(b[0] * b[0] + b[2] * b[2]);
+  bn[0] = b[2] / no;
+  bn[2] = -b[0] / no;
+  bn[4] = 0.2 + age * 0.15; // to change the depth of the leaf
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + lb * b[j];
+
+  // for the color
+  var li = 0.7 + 0.2 * (1 - Math.abs(b[1])),
+    rli = 0;
+  if (!green) {
+    rli = 0.4 + li * rnd[irnd++];
+    li = 0.3 + li * rnd[irnd] * rnd[irnd++];
+  }
+
+  pt[off++] = 0.7 * rli;
+  pt[off++] = 0.6 * li;
+  pt[off++] = 0;
+  pt[off++] = dis;
+  pt[off++] = 0.5;
+  t = t0 + 1;
+  var sd = Math.sin(Math.PI * 0.1),
+    cd = Math.cos(Math.PI * 0.1),
+    si = 0,
+    co = -1,
+    tmp;
+  for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (r1 * co + 0.1) +
+        bn[j] * r1 * si;
+    pt[off++] = rli;
+    pt[off++] = li;
+    pt[off++] = 0;
+    pt[off++] = 0.4 + dis;
+    pt[off++] = 1;
+    tmp = si * cd + co * sd;
+    co = co * cd - si * sd;
+    si = tmp;
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (rm * co + 0.15) +
+        bn[j] * rm * si;
+    pt[off++] = rli;
+    pt[off++] = li;
+    pt[off++] = 0;
+    pt[off++] = 0.75 + dis;
+    pt[off++] = 1;
+    tmp = si * cd + co * sd;
+    co = co * cd - si * sd;
+    si = tmp;
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (r2 * co + 0.2) +
+        bn[j] * r2 * si;
+    pt[off++] = rli;
+    pt[off++] = li;
+    pt[off++] = 0;
+    pt[off++] = 1 + dis;
+    pt[off++] = 0.5;
+    tmp = si * cd + co * sd;
+    co = co * cd - si * sd;
+    si = tmp;
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (rm * co + 0.15) +
+        bn[j] * rm * si;
+    pt[off++] = rli;
+    pt[off++] = li;
+    pt[off++] = 0;
+    pt[off++] = 0.75 + dis;
+    pt[off++] = 0;
+    tmp = si * cd + co * sd;
+    co = co * cd - si * sd;
+    si = tmp;
+    for (var j = 0; j < 3; j++)
+      pt[off++] =
+        b[j + 9] +
+        lb * b[j] +
+        bn[j + 3] +
+        b[j] * (r1 * co + 0.1) +
+        bn[j] * r1 * si;
+    pt[off++] = rli;
+    pt[off++] = li;
+    pt[off++] = 0;
+    pt[off++] = 0.4 + dis;
+    pt[off++] = 0;
+  }
+  for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 4; j++) {
+      ind[pi2++] = t0;
+      ind[pi2++] = t++;
+      ind[pi2++] = t;
+    }
+    t++;
+  }
+  dis = b[13];
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + R * b[j + 3];
+  pt[off++] = 0.5;
+  pt[off++] = 0.5;
+  pt[off++] = 0;
+  pt[off++] = dis;
+  pt[off++] = 0;
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] + R * b[j + 6];
+  pt[off++] = 0.5;
+  pt[off++] = 0.5;
+  pt[off++] = 0;
+  pt[off++] = dis;
+  pt[off++] = 0;
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] - R * b[j + 3];
+  pt[off++] = 0.5;
+  pt[off++] = 0.5;
+  pt[off++] = 0;
+  pt[off++] = dis;
+  pt[off++] = 0;
+  for (var j = 0; j < 3; j++) pt[off++] = b[j + 9] - R * b[j + 6];
+  pt[off++] = 0.5;
+  pt[off++] = 0.5;
+  pt[off++] = 0;
+  pt[off++] = dis;
+  pt[off++] = 0;
+  ind[pi2++] = t0;
+  ind[pi2++] = t++;
+  ind[pi2++] = t;
+  ind[pi2++] = t0;
+  ind[pi2++] = t++;
+  ind[pi2++] = t;
+  ind[pi2++] = t0;
+  ind[pi2++] = t++;
+  ind[pi2++] = t;
+  ind[pi2++] = t0;
+  ind[pi2++] = t;
+  ind[pi2++] = t - 3;
+}
+*/
 
 /*
   function leaves2(b, R) {
